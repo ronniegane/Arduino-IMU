@@ -5,6 +5,7 @@ then plots these as a time series.'''
 
 ''' TO DO:
 - Add table for Max/Min/Range/Average/Standard dev for various sensors
+- Filter GPS data: some points have latitude = longitude
 - Math/physics magic to transform our X,Y,Z into the vehicle's coordinate system
 - Math/physics magic to work out tyre forces
 '''
@@ -169,7 +170,7 @@ plt.title("Rotational accelerations")
 plt.legend(loc=2)
 plt.ylabel("Units?")
 
-plt.show()
+
 
 
 # Possible other plots:
@@ -178,6 +179,11 @@ plt.show()
 
 
 # GPS 2D data plot, lat and long
+## plt.figure()
+## plt.scatter(latList,longList)
+
+
 # Maybe colour by velocity?
 
 
+plt.show()
