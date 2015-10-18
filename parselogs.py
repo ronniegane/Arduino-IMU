@@ -80,7 +80,7 @@ for row in reader:
 
     # Find start and end markers of string
     startIndex = dataString.find('!!!')
-    endIndex = dataString.find('***')
+    endIndex = dataString.find('*')
     
     if (startIndex > -1 and endIndex > startIndex): # makes sure we are only checking complete logs
 
