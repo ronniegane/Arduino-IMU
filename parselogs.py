@@ -31,11 +31,10 @@ writer = csv.writer(outFile)
 writer.writerow(["Time", "Lat", "Long", "Pitch", "Yaw", "Roll", "AccX", "AccY", "AccZ", "GyroX", "GyroY", "GyroZ"]) # Headers
 
 # Declaring variables
+'''We will record all the data values as lists'''
 pitchList = []
 rollList = []
 yawList = []
-countList = []
-count = 0
 timeList = []
 accXList = []
 accYList = []
@@ -130,10 +129,6 @@ for row in reader:
         latList.append(latitude)
         longList.append(longitude)
 
-        # Count of datapoints
-        countList.append(count)
-        count += 1
-
         # Add to the cleaned up CSV file
         writer.writerow([timeStamp, latitude, longitude, pitch, yaw, roll, accX, accY, accZ, gyroX, gyroY, gyroZ])
 
@@ -145,7 +140,7 @@ inFile.close()
 outFile.close()
 
 # Plotting
-print("Plotting %s data points" % len(countList))
+print("Plotting %s data points" % len(timeList))
 
 # Line plot of roll/pitch/yaw
 plt.plot(pitchList, label='Pitch')
