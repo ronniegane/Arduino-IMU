@@ -5,6 +5,7 @@ then plots these as a time series.'''
 
 ''' TO DO:
 - Add table for Max/Min/Range/Average/Standard dev for various sensors
+- Make try/except more sensible
 - Filter GPS data: some points have latitude = longitude
 - Math/physics magic to transform our X,Y,Z into the vehicle's coordinate system
 - Math/physics magic to work out tyre forces
@@ -20,8 +21,8 @@ import re                               # regular expressions for searching stri
 # Open file
 
 # Hardcode filenames at first
-myFile = 'Data for Session 4 - 1445142658502.csv'    # Change to desired input filename
-outFile = open('cleaned data session 4.csv', 'wb')   # Change to desired output filename
+myFile = 'MainTesting_BMW.csv'    # Change to desired input filename
+outFile = open('cleaned data BMW session.csv', 'wb')   # Change to desired output filename
 
 # Create CSV "reader" and "writer" files
 inFile = open(myFile, 'rb')
@@ -89,40 +90,69 @@ for row in reader:
         timeList.append(timeStamp)
         
         '''Pitch'''
-        pitch  = re.search("PCH:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        pitchList.append(float(pitch))
+        try:
+            pitch  = re.search("PCH:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            pitchList.append(float(pitch))
+        except:
+            pitchList.append(pitchList[-1])
 
         '''Roll'''
-        roll  = re.search("RLL:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        rollList.append(float(roll))
+        try:
+            roll  = re.search("RLL:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            rollList.append(float(roll))
+        except:
+            rollList.append(rollList[-1])
 
         '''Yaw'''
-        yaw  = re.search("YAW:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        yawList.append(float(yaw))
+        try:
+            yaw  = re.search("YAW:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            yawList.append(float(yaw))
+        except:
+            yawList.append(yawList[-1])        
 
         '''AccX'''
-        accX  = re.search("AN3:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        accXList.append(float(accX))
+        try:
+            accX  = re.search("AN3:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            accXList.append(float(accX))
+        except:
+            accXList.append(accXList[-1])        
         
         '''AccY'''
-        accY  = re.search("AN4:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        accYList.append(float(accY))
+        try:
+            accY  = re.search("AN4:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            accYList.append(float(accY))
+        except:
+            accYList.append(accYList[-1])        
         
         '''AccZ'''
-        accZ  = re.search("AN5:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        accZList.append(float(accZ))   
+        try:
+            accZ  = re.search("AN5:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            accZList.append(float(accZ))
+        except:
+            accZList.append(accZList[-1])        
         
         '''GyroX'''
-        gyroX  = re.search("AN0:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        gyroXList.append(float(gyroX))
+        try:
+            gyroX  = re.search("AN0:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            gyroXList.append(float(gyroX))
+        except:
+            gyroXList.append(gyroXList[-1])            
         
         '''GyroY'''
-        gyroY  = re.search("AN1:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        gyroYList.append(float(gyroY))
+        try:
+            gyroY  = re.search("AN1:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            gyroYList.append(float(gyroY))
+        except:
+            gyroYList.append(gyroYList[-1])        
         
         '''GyroZ'''
-        gyroZ  = re.search("AN2:(-?[0-9]+.[0-9]+)", dataString).group(1)
-        gyroZList.append(float(gyroZ))
+        try:
+            gyroZ  = re.search("AN2:(-?[0-9]+.[0-9]+)", dataString).group(1)
+            gyroZList.append(float(gyroZ))
+        except:
+            gyroZList.append(gyroZList[-1])
+            
+            
 
         '''GPS'''
         latitude = row[2]
