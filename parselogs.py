@@ -17,8 +17,8 @@ import re # regular expressions
 # Open file
 
 # Hardcode filenames at first
-myFile = 'Data for Session 1 - 1444208156913.csv'    # Change to desired input filename
-outFile = open('cleaned data.csv', 'wb')             # Change to desired output filename
+myFile = 'Data for Session 4 - 1445142658502.csv'    # Change to desired input filename
+outFile = open('cleaned data session 4.csv', 'wb')             # Change to desired output filename
 
 inFile = open(myFile, 'rb')
 reader = csv.reader(inFile)
