@@ -16,6 +16,7 @@ import matplotlib as mp                 # for plotting
 import matplotlib.pyplot as plt         # more plotting
 import csv                              # reading and writing CSV files
 import re                               # regular expressions for searching strings
+from datetime import datetime           # for dealing with time values
 
 
 # Open file
@@ -173,35 +174,52 @@ outFile.close()
 # Subtitle time
 shortTime = re.search("[0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+",timeList[0]).group()
 
+# Calculate time gaps
+# Format from arduIMU is YYYY-MM-DD HH:MM:SS.ddd"
+timeFormat = "%Y-%m-%d %H:%M:%S.%f"
+startTime = timeList[0]
+stripTime = datetime.strptime(startTime, timeFormat)
+datetimeList = [(datetime.strptime(x, timeFormat) - stripTime) for x in timeList] # produce a list of timedeltas
+deltaList = [x.seconds + x.microseconds/float(1000000) for x in datetimeList] # produce a list of gaps
+
+
+print(deltaList[:30])
+
 
 # Plotting
 print("Plotting %s data points" % len(timeList))
 
 # Line plot of roll/pitch/yaw
-plt.plot(pitchList, label='Pitch')
-plt.plot(rollList, label='Roll')
-plt.plot(yawList, label='Yaw')
+plt.plot(deltaList, pitchList, label='Pitch')
+plt.plot(deltaList, rollList, label='Roll')
+plt.plot(deltaList, yawList, label='Yaw')
 plt.title("Pitch / Roll / Yaw" + "\n" + shortTime, fontsize = 18)
 plt.legend(loc=2)
+plt.grid()
+plt.xlabel("Time (seconds from start)")
 plt.ylabel("Degrees")
 
 
 # Line plot of linear accelerations
 plt.figure()
-plt.plot(accXList, label='X-Accel')
-plt.plot(accYList, label='Y-Accel')
-plt.plot(accZList, label='Z-Accel')
+plt.plot(deltaList, accXList, label='X-Accel')
+plt.plot(deltaList, accYList, label='Y-Accel')
+plt.plot(deltaList, accZList, label='Z-Accel')
 plt.title("Linear accelerations" + "\n" + shortTime, fontsize = 18)
 plt.legend(loc=2)
+plt.grid()
+plt.xlabel("Time (seconds from start)")
 plt.ylabel("Units?")
 
 # Line plot of rotational accelerations
 plt.figure()
-plt.plot(gyroXList, label='X-Gyro')
-plt.plot(gyroYList, label='Y-Gyro')
-plt.plot(gyroZList, label='Z-Gyro')
+plt.plot(deltaList, gyroXList, label='X-Gyro')
+plt.plot(deltaList, gyroYList, label='Y-Gyro')
+plt.plot(deltaList, gyroZList, label='Z-Gyro')
 plt.title("Rotational accelerations" + "\n" + shortTime, fontsize = 18)
 plt.legend(loc=2)
+plt.grid()
+plt.xlabel("Time (seconds from start)")
 plt.ylabel("Units?")
 
 
