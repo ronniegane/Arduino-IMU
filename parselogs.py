@@ -170,6 +170,9 @@ for row in reader:
 inFile.close()
 outFile.close()
 
+# Calculate time gaps
+
+
 # Plotting
 print("Plotting %s data points" % len(timeList))
 
@@ -177,7 +180,7 @@ print("Plotting %s data points" % len(timeList))
 plt.plot(pitchList, label='Pitch')
 plt.plot(rollList, label='Roll')
 plt.plot(yawList, label='Yaw')
-plt.title("Pitch / Roll / Yaw")
+plt.title("Pitch / Roll / Yaw" + "\n" + timeList[0], fontsize = 18)
 plt.legend(loc=2)
 plt.ylabel("Degrees")
 
@@ -187,7 +190,7 @@ plt.figure()
 plt.plot(accXList, label='X-Accel')
 plt.plot(accYList, label='Y-Accel')
 plt.plot(accZList, label='Z-Accel')
-plt.title("Linear accelerations")
+plt.title("Linear accelerations" + "\n" + timeList[0], fontsize = 18)
 plt.legend(loc=2)
 plt.ylabel("Units?")
 
@@ -196,7 +199,7 @@ plt.figure()
 plt.plot(gyroXList, label='X-Gyro')
 plt.plot(gyroYList, label='Y-Gyro')
 plt.plot(gyroZList, label='Z-Gyro')
-plt.title("Rotational accelerations")
+plt.title("Rotational accelerations" + "\n" + timeList[0], fontsize = 18)
 plt.legend(loc=2)
 plt.ylabel("Units?")
 
