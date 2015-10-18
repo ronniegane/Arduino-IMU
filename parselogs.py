@@ -183,9 +183,6 @@ datetimeList = [(datetime.strptime(x, timeFormat) - stripTime) for x in timeList
 deltaList = [x.seconds + x.microseconds/float(1000000) for x in datetimeList] # produce a list of gaps
 
 
-print(deltaList[:30])
-
-
 # Plotting
 print("Plotting %s data points" % len(timeList))
 
