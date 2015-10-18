@@ -4,28 +4,31 @@ and extracts roll, pitch, yaw and other values
 then plots these as a time series.'''
 
 ''' TO DO:
-- Adjust to suit newer CSV format with GPU logs etc
+- Add table for Max/Min/Range/Average/Standard dev for various sensors
+- Math/physics magic to transform our X,Y,Z into the vehicle's coordinate system
+- Math/physics magic to work out tyre forces
 '''
 
 # Library imports
-import matplotlib as mp # for plotting
-import matplotlib.pyplot as plt 
-import csv # reading and writing CSV files
-import re # regular expressions
+import matplotlib as mp                 # for plotting
+import matplotlib.pyplot as plt         # more plotting
+import csv                              # reading and writing CSV files
+import re                               # regular expressions for searching strings
 
 
 # Open file
 
 # Hardcode filenames at first
 myFile = 'Data for Session 4 - 1445142658502.csv'    # Change to desired input filename
-outFile = open('cleaned data session 4.csv', 'wb')             # Change to desired output filename
+outFile = open('cleaned data session 4.csv', 'wb')   # Change to desired output filename
 
+# Create CSV "reader" and "writer" files
 inFile = open(myFile, 'rb')
 reader = csv.reader(inFile)
 
 
 writer = csv.writer(outFile)
-writer.writerow(["Time", "Pitch", "Yaw", "Roll", "AccX", "AccY", "AccZ", "GyroX", "GyroY", "GyroZ"]) # Headers
+writer.writerow(["Time", "Lat", "Long", "Pitch", "Yaw", "Roll", "AccX", "AccY", "AccZ", "GyroX", "GyroY", "GyroZ"]) # Headers
 
 # Declaring variables
 pitchList = []
@@ -40,13 +43,15 @@ accZList = []
 gyroXList = []
 gyroYList = []
 gyroZList = []
+latList = []
+longList = []
 
 # Close any open plots
 plt.close("all")
 
 # Loop through lines
 for row in reader:
-    ''' each row will be list [Datastring, timestamp]
+    ''' each row will be list [timestamp, datastring, latitude, longitude]
     Datastring components:
     RLL: Roll, degrees
     PCH: Pitch, degrees
@@ -69,17 +74,19 @@ for row in reader:
     SOG: Speed over ground
     SAT: Satellite count
     '''
-    # print(row) # for testing
-    # Record values to lists
-    # Find index of the keyword
-    startIndex = row[0].find('!!!')
-    endIndex = row[0].find('***')
+
+    dataString = row[1]
+
+    # Find start and end markers of string
+    startIndex = dataString.find('!!!')
+    endIndex = dataString.find('***')
+    
     if (startIndex > -1 and endIndex > startIndex): # makes sure we are only checking complete logs
 
-        dataString = row[0]
+        
         '''Timestamp'''
-        timeStamp = row[1]
-        timeList.append(row[1])
+        timeStamp = row[0]
+        timeList.append(timeStamp)
         
         '''Pitch'''
         pitch  = re.search("PCH:(-?[0-9]+.[0-9]+)", dataString).group(1)
@@ -117,16 +124,20 @@ for row in reader:
         gyroZ  = re.search("AN2:(-?[0-9]+.[0-9]+)", dataString).group(1)
         gyroZList.append(float(gyroZ))
 
-        
+        '''GPS'''
+        latitude = row[2]
+        longitude = row[3]
+        latList.append(latitude)
+        longList.append(longitude)
 
         # Count of datapoints
         countList.append(count)
         count += 1
 
         # Add to the cleaned up CSV file
-        writer.writerow([timeStamp, pitch, yaw, roll, accX, accY, accZ, gyroX, gyroY, gyroZ])
+        writer.writerow([timeStamp, latitude, longitude, pitch, yaw, roll, accX, accY, accZ, gyroX, gyroY, gyroZ])
 
-print(pitchList)
+
 # Do magic to acceleration values to produce tyre forces
 
 # Close files
@@ -143,7 +154,7 @@ plt.plot(yawList, label='Yaw')
 plt.title("Pitch / Roll / Yaw")
 plt.legend(loc=2)
 plt.ylabel("Degrees")
-#plt.show()
+
 
 # Line plot of linear accelerations
 plt.figure()
@@ -165,13 +176,13 @@ plt.ylabel("Units?")
 
 plt.show()
 
-print(accYList[24:27])
-# Line plot of velocity
 
+# Possible other plots:
+
+# Line plot of velocity
 
 
 # GPS 2D data plot, lat and long
 # Maybe colour by velocity?
 
 
-# Save plots and data as output file
