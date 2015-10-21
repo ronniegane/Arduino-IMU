@@ -5,18 +5,19 @@ then plots these as a time series.'''
 
 ''' TO DO:
 - Add table for Max/Min/Range/Average/Standard dev for various sensors
-- Make try/except more sensible
+- Make "try/except" more sensible
 - Filter GPS data: some points have latitude = longitude
 - Math/physics magic to transform our X,Y,Z into the vehicle's coordinate system
 - Math/physics magic to work out tyre forces
 '''
 
 # Library imports
-import matplotlib as mp                 # for plotting
+
 import matplotlib.pyplot as plt         # more plotting
 import csv                              # reading and writing CSV files
 import re                               # regular expressions for searching strings
 from datetime import datetime           # for dealing with time values
+from numpy import mean
 
 
 # Open file
@@ -183,12 +184,79 @@ datetimeList = [(datetime.strptime(x, timeFormat) - stripTime) for x in timeList
 deltaList = [x.seconds + x.microseconds/float(1000000) for x in datetimeList] # produce a list of gaps
 
 
+
+
+
+# Adjust roll values to be centred around zero rather than +- 180deg
+adjRollList = []
+for rollVal in rollList:
+    if rollVal < 0:
+        adjRollList.append(180+rollVal)
+    else:
+        adjRollList.append(180-rollVal)
+        
+# Calculate average, range of values for various 
+avgDict = {
+            "Roll": mean(adjRollList),
+            "Yaw": mean(yawList),
+            "Pitch": mean(pitchList),
+            "AccX": mean(accXList),
+            "AccY": mean(accYList),
+            "AccZ": mean(accZList),
+            "GyroX": mean(gyroXList),
+            "GyroY": mean(gyroYList),
+            "GyroZ": mean(gyroZList)
+}
+
+maxDict = {
+            "Roll": max(adjRollList),
+            "Yaw": max(yawList),
+            "Pitch": max(pitchList),
+            "AccX": max(accXList),
+            "AccY": max(accYList),
+            "AccZ": max(accZList),
+            "GyroX": max(gyroXList),
+            "GyroY": max(gyroYList),
+            "GyroZ": max(gyroZList)
+}
+
+minDict = {
+            "Roll": max(adjRollList),
+            "Yaw": max(yawList),
+            "Pitch": max(pitchList),
+            "AccX": max(accXList),
+            "AccY": max(accYList),
+            "AccZ": max(accZList),
+            "GyroX": max(gyroXList),
+            "GyroY": max(gyroYList),
+            "GyroZ": max(gyroZList)
+}
+
+rangeDict = {}
+for key in maxDict.keys():
+    rangeDict[key] = maxDict[key] - minDict[key]
+
+print("Average")
+print(avgDict)
+
+# Adjust data by mean value
+accXList = accXList - avgDict["AccX"]
+accYList = accYList - avgDict["AccY"]
+accZList = accZList - avgDict["AccZ"]
+
+gyroXList = gyroXList - avgDict["GyroX"]
+gyroYList = gyroYList - avgDict["GyroY"]
+gyroZList = gyroZList - avgDict["GyroZ"]
+
+
+
+
 # Plotting
 print("Plotting %s data points" % len(timeList))
 
 # Line plot of roll/pitch/yaw
 plt.plot(deltaList, pitchList, label='Pitch')
-plt.plot(deltaList, rollList, label='Roll')
+plt.plot(deltaList, adjRollList, label='Roll')
 plt.plot(deltaList, yawList, label='Yaw')
 plt.title("Pitch / Roll / Yaw" + "\n" + shortTime, fontsize = 18)
 plt.legend(loc=2)
@@ -199,9 +267,9 @@ plt.ylabel("Degrees")
 
 # Line plot of linear accelerations
 plt.figure()
-plt.plot(deltaList, accXList, label='X-Accel')
-plt.plot(deltaList, accYList, label='Y-Accel')
-plt.plot(deltaList, accZList, label='Z-Accel')
+plt.plot(deltaList, accZList, label='Z-Accel', alpha = 0.7)
+plt.plot(deltaList, accYList, label='Y-Accel', alpha = 0.7)
+plt.plot(deltaList, accXList, label='X-Accel', alpha = 0.7)
 plt.title("Linear accelerations" + "\n" + shortTime, fontsize = 18)
 plt.legend(loc=2)
 plt.grid()
@@ -210,9 +278,9 @@ plt.ylabel("Units?")
 
 # Line plot of rotational accelerations
 plt.figure()
-plt.plot(deltaList, gyroXList, label='X-Gyro')
-plt.plot(deltaList, gyroYList, label='Y-Gyro')
-plt.plot(deltaList, gyroZList, label='Z-Gyro')
+plt.plot(deltaList, gyroXList, label='X-Gyro', alpha = 0.7)
+plt.plot(deltaList, gyroYList, label='Y-Gyro', alpha = 0.7)
+plt.plot(deltaList, gyroZList, label='Z-Gyro', alpha = 0.7)
 plt.title("Rotational accelerations" + "\n" + shortTime, fontsize = 18)
 plt.legend(loc=2)
 plt.grid()
