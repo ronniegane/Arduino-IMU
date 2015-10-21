@@ -318,8 +318,22 @@ print(latList[:10])
 print("Longitude")
 print(longList[:10])
 # GPS 2D data plot, lat and long
+
+
+# Colouring by other data
+
+
+
 plt.figure()
-plt.scatter(latList,longList)
+plt.scatter(longList, latList, s=50, c=pitchList)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "Pitch")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
 #plt.plot(latList, longList, linestyle='None', marker='o')
 plt.grid()
 
