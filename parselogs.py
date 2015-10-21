@@ -93,68 +93,72 @@ for row in reader:
         
         '''Pitch'''
         try:
-            pitch  = re.search("PCH:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            pitchList.append(float(pitch))
+            pitch  = re.search("PCH:(-?[0-9]+\.[0-9]+)", dataString).group(1)
         except:
-            pitchList.append(pitchList[-1])
-
+            pitch = pitchList[-1]
+            
         '''Roll'''
         try:
-            roll  = re.search("RLL:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            rollList.append(float(roll))
+            roll  = re.search("RLL:(-?[0-9]+\.[0-9]+)", dataString).group(1)
         except:
-            rollList.append(rollList[-1])
+            roll = rollList[-1]
 
         '''Yaw'''
         try:
-            yaw  = re.search("YAW:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            yawList.append(float(yaw))
+            yaw  = re.search("YAW:(-?[0-9]+\.[0-9]+)", dataString).group(1)
         except:
-            yawList.append(yawList[-1])        
+            yaw = yawList[-1]
 
         '''AccX'''
         try:
-            accX  = re.search("AN3:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            accXList.append(float(accX))
+            accX  = re.search("AN3:(-?[0-9]+\.[0-9]+)", dataString).group(1)            
         except:
-            accXList.append(accXList[-1])        
+            accX = accXList[-1]
         
         '''AccY'''
         try:
-            accY  = re.search("AN4:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            accYList.append(float(accY))
+            accY  = re.search("AN4:(-?[0-9]+\.[0-9]+)", dataString).group(1)            
         except:
-            accYList.append(accYList[-1])        
+            accY = accYList[-1]        
         
         '''AccZ'''
         try:
-            accZ  = re.search("AN5:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            accZList.append(float(accZ))
+            accZ  = re.search("AN5:(-?[0-9]+\.[0-9]+)", dataString).group(1)            
         except:
-            accZList.append(accZList[-1])        
+            accZ = accZList[-1]
         
         '''GyroX'''
         try:
-            gyroX  = re.search("AN0:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            gyroXList.append(float(gyroX))
+            gyroX  = re.search("AN0:(-?[0-9]+\.[0-9]+)", dataString).group(1)            
         except:
-            gyroXList.append(gyroXList[-1])            
+            gyroX = gyroXList[-1]            
         
         '''GyroY'''
         try:
-            gyroY  = re.search("AN1:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            gyroYList.append(float(gyroY))
+            gyroY  = re.search("AN1:(-?[0-9]+\.[0-9]+)", dataString).group(1)            
         except:
-            gyroYList.append(gyroYList[-1])        
+            gyroY = gyroYList[-1]        
         
         '''GyroZ'''
         try:
-            gyroZ  = re.search("AN2:(-?[0-9]+.[0-9]+)", dataString).group(1)
-            gyroZList.append(float(gyroZ))
+            gyroZ  = re.search("AN2:(-?[0-9]+\.[0-9]+)", dataString).group(1)            
         except:
-            gyroZList.append(gyroZList[-1])
-            
-            
+            gyroZ = gyroZList[-1]
+        
+        
+        
+        
+        # Add to lists
+        pitchList.append(float(pitch))
+        rollList.append(float(roll))
+        yawList.append(float(yaw))
+        accXList.append(float(accX))
+        accYList.append(float(accY))
+        accZList.append(float(accZ))
+        gyroXList.append(float(gyroX))
+        gyroYList.append(float(gyroY))
+        gyroZList.append(float(gyroZ))
+        
 
         '''GPS'''
         latitude = float(row[2])
@@ -313,34 +317,137 @@ plt.ylabel("Units?")
 
 # Line plot of velocity
 
-print("Latitude")
-print(latList[:10])
-print("Longitude")
-print(longList[:10])
+
+
+
 # GPS 2D data plot, lat and long
-
-
 # Colouring by other data
-
-
-
 plt.figure()
-plt.scatter(longList, latList, s=50, c=pitchList)
+plt.scatter(longList, latList, s=100, c=pitchList)
+plt.clim(-20,50)
 plt.xlim(min(longList)-.001, max(longList)+.001)
 plt.ylim(min(latList)-.001, max(latList)+.001)
 ax = plt.gca()
-ax.get_xaxis().get_major_formatter().set_useOffset(False)
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
 ax.get_yaxis().get_major_formatter().set_useOffset(False)
 plt.colorbar(label = "Pitch")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
-#plt.plot(latList, longList, linestyle='None', marker='o')
 plt.grid()
 
-# why is the scale so weird?
+
+plt.figure()
+plt.scatter(longList, latList, s=100, c=yawList)
+
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "Yaw")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
 
 
-# Maybe colour by velocity?
+plt.figure()
+plt.scatter(longList, latList, s=100, c=adjRollList)
+plt.clim(-20,50)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "Roll")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
+
+# Colouring by other data
+plt.figure()
+plt.scatter(longList, latList, s=100, c=accXList)
+plt.clim(-2000,2000)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "AccX")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
+
+
+plt.figure()
+plt.scatter(longList, latList, s=100, c=accYList)
+plt.clim(-4000,4000)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "accY")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
+
+
+plt.figure()
+plt.scatter(longList, latList, s=100, c=accZList)
+plt.clim(-5000,5000)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "AccZ")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
+
+# Colouring by other data
+plt.figure()
+plt.scatter(longList, latList, s=100, c=gyroXList)
+plt.clim(-200,200)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "GyroX")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
+
+
+plt.figure()
+plt.scatter(longList, latList, s=100, c=gyroYList)
+plt.clim(-200,200)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "GyroY")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
+
+
+plt.figure()
+plt.scatter(longList, latList, s=100, c=gyroZList)
+plt.clim(-200,200)
+plt.xlim(min(longList)-.001, max(longList)+.001)
+plt.ylim(min(latList)-.001, max(latList)+.001)
+ax = plt.gca()
+ax.get_xaxis().get_major_formatter().set_useOffset(False)  # This stops the tick marks of the axes going to "relative offset" scaling
+ax.get_yaxis().get_major_formatter().set_useOffset(False)
+plt.colorbar(label = "gyroZ")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid()
+
+# Maybe colour by velocity? Where would we calculate velocity from?
 
 
 plt.show()
