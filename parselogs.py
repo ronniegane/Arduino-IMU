@@ -157,16 +157,33 @@ for row in reader:
             
 
         '''GPS'''
-        latitude = row[2]
-        longitude = row[3]
-        latList.append(latitude)
-        longList.append(longitude)
+        latitude = float(row[2])
+        longitude = float(row[3])
+        # Check for sensible values
+        #print("Lat: %s" % latitude)
+        #print("Long: %s" % longitude)
+
+
+        # Latitude should be between -35 and -50 for NZ
+        if -50 < latitude <-35:
+            latList.append(latitude)
+        else:
+            # Just copy previous value
+            latList.append(latList[-1])
+        
+        # Longitude should be between +165 and +180 for NZ
+        if 165 < longitude < 180:
+            longList.append(longitude)
+        else:
+            longList.append(longList[-1])
 
         # Add to the cleaned up CSV file
         writer.writerow([timeStamp, latitude, longitude, pitch, yaw, roll, accX, accY, accZ, gyroX, gyroY, gyroZ])
 
 
 # Do magic to acceleration values to produce tyre forces
+
+print(timeList[:10])
 
 # Close files
 inFile.close()
@@ -236,7 +253,7 @@ rangeDict = {}
 for key in maxDict.keys():
     rangeDict[key] = maxDict[key] - minDict[key]
 
-print("Average")
+print("Raw average")
 print(avgDict)
 
 # Adjust data by mean value
@@ -248,6 +265,8 @@ gyroXList = gyroXList - avgDict["GyroX"]
 gyroYList = gyroYList - avgDict["GyroY"]
 gyroZList = gyroZList - avgDict["GyroZ"]
 
+
+# Filter GPS data
 
 
 
@@ -294,10 +313,17 @@ plt.ylabel("Units?")
 
 # Line plot of velocity
 
-
+print("Latitude")
+print(latList[:10])
+print("Longitude")
+print(longList[:10])
 # GPS 2D data plot, lat and long
-## plt.figure()
-## plt.scatter(latList,longList)
+plt.figure()
+plt.scatter(latList,longList)
+#plt.plot(latList, longList, linestyle='None', marker='o')
+plt.grid()
+
+# why is the scale so weird?
 
 
 # Maybe colour by velocity?
