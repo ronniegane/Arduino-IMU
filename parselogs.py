@@ -205,9 +205,7 @@ def main():
             # Add to the cleaned up CSV file
             writer.writerow([timeStamp, latitude, longitude, pitch, yaw, roll, accX, accY, accZ, gyroX, gyroY, gyroZ])
     
-    
     '''In the future this section will expand to include calcs of normal force'''
-    print(timeList[:10])
     
     # Close files
     inFile.close()
@@ -288,10 +286,7 @@ def main():
     rangeDict = {}
     for key in maxDict.keys():
         rangeDict[key] = maxDict[key] - minDict[key]
-    
-    print("Raw average")
-    print(avgDict)
-    
+       
     # Re-centre data around mean value
     # This fixes the weird offset values of some sensors
     # But assumes the mean acceleration will be zero - which 
